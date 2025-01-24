@@ -1,4 +1,4 @@
-import { readFile } from "fs/promises";
+import { readFile ,writeFile} from "fs/promises";
 import { createServer } from "http";
 import crypto from "crypto";
 import path from "path";
@@ -19,10 +19,10 @@ const serveFile = async (res, filepath, contentType) => {
 
 }
 
-const loadLinks=async ()=>{
+const loadLinks= async()=>{
     try {
         const data=await readFile(DATA_FILE, "utf-8");
-        return json.parse(data);
+        return JSON.parse(data);
     } catch (error) {
         if(error.code==="ENOENT"){
             await writeFile(DATA_FILE,JSON.stringify({}));
@@ -30,7 +30,11 @@ const loadLinks=async ()=>{
         }
         throw error;
     }
-}
+};
+
+const saveLinks=async (links)=>{
+    await writeFile(DATA_FILE,JSON.stringify(links));
+};
 
 const server = createServer(async (req, res) => {
     console.log(req.url);
@@ -41,6 +45,11 @@ const server = createServer(async (req, res) => {
         }
         else if (req.url === "/style.css") {
             return serveFile(res, path.join("public", "style.css"), "text/css");
+        }
+        else if(req.url ==="/links"){
+            const links=await loadLinks();
+            res.writeHead(200,{"Content-Type":"application/json"});
+            return res.end(JSON.stringify(links));
         }
 
     }
@@ -53,7 +62,7 @@ const server = createServer(async (req, res) => {
         req.on("data", (chunk) => {
             body += chunk;
         })
-        req.on("end", () => {
+        req.on("end", async() => {
             console.log(body);
             const { url, shortCode } = JSON.parse(body);
 
@@ -64,10 +73,22 @@ const server = createServer(async (req, res) => {
             
             const finalShortCode = shortCode ||crypto.randomBytes(4).toString("hex");
 
+            if(links[finalShortCode]){
+                res.writeHead(409,{"Content-Type":"text/plain"});
+                return res.end("Short code already exists.Please try another one.");
+            }
+
+            links[finalShortCode]=url;
+            await saveLinks(links);
+
+            res.writeHead(200,{"Content-Type":"application/json"});
+            res.end(JSON.stringify({shortCode:finalShortCode}));
+            
+
         })
     }
 });
 
 server.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
-})
+});
