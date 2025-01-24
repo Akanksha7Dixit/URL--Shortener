@@ -51,6 +51,19 @@ const server = createServer(async (req, res) => {
             res.writeHead(200,{"Content-Type":"application/json"});
             return res.end(JSON.stringify(links));
         }
+        else{
+            const links= await loadLinks();
+            const shortCode = req.url.slice(1);
+            console.log("Links redirecting",req.url);
+
+            if(links[shortCode]){
+                res.writeHead(302,{location:links[shortCode]});
+                return res.end();
+            }
+
+            res.writeHead(404,{"Content-Type":"text/plain"});
+            return res.end("shortened url is not found!")
+        }
 
     }
 
