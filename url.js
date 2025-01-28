@@ -2,10 +2,15 @@ import { readFile ,writeFile} from "fs/promises";
 import { createServer } from "http";
 import crypto from "crypto";
 import path from "path";
+import express from "express";
 
-const PORT = 3002;
+const app=express();
 
+
+const PORT = process.env.PORT||3000;
 const DATA_FILE=path.join("data","links.json");
+
+app.use(express.static("public"));
 
 const serveFile = async (res, filepath, contentType) => {
     try {
@@ -35,6 +40,26 @@ const loadLinks= async()=>{
 const saveLinks=async (links)=>{
     await writeFile(DATA_FILE,JSON.stringify(links));
 };
+
+
+app.get("/",async(req,res)=>{
+    try {
+        const file= await fstat.readFile(path.join("views","index.html"));
+        const links= await loadLinks();
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send("Internal Server Error");
+    }
+});
+
+app.post("/",async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+})
 
 const server = createServer(async (req, res) => {
     console.log(req.url);
