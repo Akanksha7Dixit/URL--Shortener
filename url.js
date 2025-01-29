@@ -79,6 +79,8 @@ app.post("/",async(req,res)=>{
         links[finalShortCode]=url;
         await saveLinks(links);
 
+        return res.redirect("/");
+
     } catch (error) {
         
     }
