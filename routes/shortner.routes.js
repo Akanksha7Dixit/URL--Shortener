@@ -37,6 +37,20 @@ const saveLinks=async (links)=>{
     await writeFile(DATA_FILE,JSON.stringify(links));
 };
 
+router.get("/report",(req,res)=>{
+    const student = [
+        {name:"Ishant",grade:"7th" , subject:"Maths"},
+        {name:"Anushka",grade:"8ht",subject:"Science"},
+        {name:"Akanksha",grade:"9th",subject:"Maths"},
+        {name:"Anubhav",grade:"10th",subject:"Social Science"},
+        {name:"Anya",grade:"7th",subject:"English"},
+    ];
+
+
+    return res.render("report",{student});
+
+})
+
 router.get("/",async(req,res)=>{
     try {
         const file= await readFile(path.join("views","index.html"),"utf-8");
