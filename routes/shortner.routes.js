@@ -1,85 +1,13 @@
-import { readFile,writeFile} from "fs/promises";
-import crypto from "crypto";
-import path from "path";
+
 import { Router } from "express";
+import { postURLshortener , getShortenerPage ,redirectToShortLink} from "../controllers/postshortener.controller.js";
 
 const router = Router();
 
-const DATA_FILE=path.join("data","links.json");
-
-
-// const serveFile = async (res, filepath, contentType) => {
-//     try {
-//         const data = await readFile(filepath);
-//         res.writeHead(200, { "Content-Type": contentType });
-//         res.end(data);
-//     } catch {
-//         res.writeHead(404, { "Content-Type": "text/plain" });
-//         res.end("404 Page not found");
-//     }
-
-// }
-
-const loadLinks= async()=>{
-    try {
-        const data=await readFile(DATA_FILE, "utf-8");
-        return JSON.parse(data);
-    } catch (error) {
-        if(error.code==="ENOENT"){
-            // await writeFile(DATA_FILE,JSON.stringify({}));
-            return {};
-        }
-        throw error;
-    }
-};
-
-const saveLinks=async (links)=>{
-    await writeFile(DATA_FILE,JSON.stringify(links));
-};
-
-router.get("/",async(req,res)=>{
-    try {
-        const file= await readFile(path.join("views","index.html"),"utf-8");
-        const links= await loadLinks();
-        
-        const content = file.replace(
-            "{{shortened_urls}}",
-            Object.entries(links)
-             .map(
-                ([shortCode,url])=>
-                   `<li><a href="/${shortCode}" target="_blank">${req.get('host')}/${shortCode}</a> -> ${url}</li>`
-        )
-        .join("")
-    );
-    
-    return res.send(content);
-    }
-    catch (error) {
-        console.error(error);
-        return res.status(500).send("Internal Server Error");
-    }
-});
-
-router.post("/",async(req,res)=>{
-    try {
-        const { url, shortCode } = req.body;
-        const finalShortCode = shortCode ||crypto.randomBytes(4).toString("hex");
-        const links= await loadLinks();
-
-        if(links[finalShortCode]){
-            return res.status(409).send("Short Code already exists.Please another one")
-        }
-
-        links[finalShortCode]=url;
-        await saveLinks(links);
-
-        return res.redirect("/");
-
-    } catch (error) {
-        
-    }
-});
-
+router.get("/",getShortenerPage);
+router.post("/",postURLshortener);
+router.get("/:shortCode",redirectToShortLink);
+                                                                                    
 router.get("/:shortCode",async(req,res)=>{
     try {
         const {shortCode}=req.params;
