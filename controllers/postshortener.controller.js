@@ -7,7 +7,6 @@ export const getShortenerPage = async(req,res)=>{
     try {
         const file= await readFile(path.join("views","index.ejs"),"utf-8");
         const links= await loadLinks();
-        
         return res.render("index",{links,host:req.host});
     }
     catch (error) {
