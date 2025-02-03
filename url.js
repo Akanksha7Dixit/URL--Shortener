@@ -1,6 +1,5 @@
 import express from "express";
-import { shortenerRoutes } from "./routes/shortner.routes.js";
-import path from "path";
+import { shortenerRoutes } from "./routes/shortner.routes.js"
 
 const app=express();
  
