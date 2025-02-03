@@ -17,6 +17,7 @@ app.set("view engine","ejs");
 app.use(express.json());
 app.use(shortenerRoutes);
 
+
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
