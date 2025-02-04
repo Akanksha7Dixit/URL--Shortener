@@ -16,6 +16,7 @@ export const loadLinks= async()=>{
     }
 };
 
+
 export const saveLinks=async (links)=>{
     await writeFile(DATA_FILE,JSON.stringify(links));
 };
