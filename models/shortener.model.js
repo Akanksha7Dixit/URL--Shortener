@@ -1,7 +1,9 @@
 import { readFile, writeFile } from "fs/promises";
 import path from "path";    
 
+
 const DATA_FILE=path.join("data","links.json");
+
 
 export const loadLinks= async()=>{
     try {
