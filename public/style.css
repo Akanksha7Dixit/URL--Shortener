@@ -4,8 +4,7 @@ body{
     justify-content: center;
     align-items: center;
     height:100vh;
-    margin:0;
-    
+    margin:0;  
 }
 .container{
     background-color: rgb(153, 160, 255);

@@ -1,9 +1,7 @@
 import { readFile, writeFile } from "fs/promises";
 import path from "path";    
 
-
 const DATA_FILE=path.join("data","links.json");
-
 
 export const loadLinks= async()=>{
     try {
@@ -17,7 +15,6 @@ export const loadLinks= async()=>{
         throw error;
     }
 };
-
 
 export const saveLinks=async (links)=>{
     await writeFile(DATA_FILE,JSON.stringify(links));

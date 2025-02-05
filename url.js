@@ -1,7 +1,9 @@
 import express from "express";
 import { shortenerRoutes } from "./routes/shortner.routes.js"
 
+//creating an instance
 const app=express();
+
  
 const PORT = process.env.PORT||3001;
 
