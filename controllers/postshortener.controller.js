@@ -35,6 +35,7 @@ export const postURLshortener = async(req,res)=>{
     }
 };
 
+
 export const redirectToShortLink = async(req,res)=>{
     try {
         const {shortCode}=req.params;
@@ -45,5 +46,7 @@ export const redirectToShortLink = async(req,res)=>{
         }
         return res.redirect(links[shortCode]);
     } 
-    catch (error) {}
+    catch (error) {
+        
+    }
 };
