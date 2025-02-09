@@ -7,7 +7,8 @@ const router = Router();
 router.get("/",getShortenerPage);
 router.post("/",postURLshortener);
 router.get("/:shortCode",redirectToShortLink);
-                                                                                    
+           
+
 router.get("/:shortCode",async(req,res)=>{
     try {
         const {shortCode}=req.params;
